@@ -1,0 +1,195 @@
+/* =============================================================
+   APPASSIONATA MUSIC SCHOOL — ATMOSPHERIC NOIR DESIGN SYSTEM
+   Design Philosophy: Cinematic darkness, warm amber accents,
+   dramatic contrast, grain texture, stage-light atmosphere.
+   Colors: Near-black bg, warm amber accent, off-white text.
+   Fonts: Cormorant Garamond (display), Source Sans 3 (body), Outfit (UI)
+   ============================================================= */
+
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-amber: var(--amber);
+  --color-amber-dim: var(--amber-dim);
+}
+
+:root {
+  --radius: 0.25rem;
+
+  /* Cream (Option A) Palette */
+  --background: oklch(0.98 0.008 80);           /* Warm cream #FAF7F2 */
+  --foreground: oklch(0.20 0.04 55);            /* Deep brown #2C1A0E */
+  --card: oklch(0.95 0.010 80);                  /* Slightly darker cream */
+  --card-foreground: oklch(0.20 0.04 55);
+  --popover: oklch(0.97 0.008 80);
+  --popover-foreground: oklch(0.20 0.04 55);
+
+  /* Dark goldenrod accent */
+  --primary: oklch(0.60 0.12 75);               /* Dark goldenrod #B8860B */
+  --primary-foreground: oklch(0.99 0.004 80);   /* Near-white on gold */
+
+  --secondary: oklch(0.93 0.012 80);
+  --secondary-foreground: oklch(0.30 0.04 55);
+  --muted: oklch(0.93 0.012 80);
+  --muted-foreground: oklch(0.50 0.04 65);      /* Warm brown-gray */
+  --accent: oklch(0.60 0.12 75);
+  --accent-foreground: oklch(0.99 0.004 80);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.985 0 0);
+  --border: oklch(0.85 0.018 75);               /* Warm tan border */
+  --input: oklch(0.85 0.018 75);
+  --ring: oklch(0.60 0.12 75);
+
+  /* Custom gold tokens */
+  --amber: oklch(0.60 0.12 75);
+  --amber-dim: oklch(0.50 0.09 75);
+  --amber-glow: oklch(0.60 0.12 75 / 15%);
+
+  /* Sidebar */
+  --sidebar: oklch(0.95 0.010 80);
+  --sidebar-foreground: oklch(0.20 0.04 55);
+  --sidebar-primary: oklch(0.60 0.12 75);
+  --sidebar-primary-foreground: oklch(0.99 0.004 80);
+  --sidebar-accent: oklch(0.93 0.012 80);
+  --sidebar-accent-foreground: oklch(0.20 0.04 55);
+  --sidebar-border: oklch(0.85 0.018 75);
+  --sidebar-ring: oklch(0.60 0.12 75);
+
+  /* Chart colors */
+  --chart-1: oklch(0.60 0.12 75);
+  --chart-2: oklch(0.50 0.09 75);
+  --chart-3: oklch(0.40 0.07 75);
+  --chart-4: oklch(0.35 0.06 75);
+  --chart-5: oklch(0.30 0.05 75);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Source Sans 3', sans-serif;
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  [type="button"]:not(:disabled),
+  [type="submit"]:not(:disabled),
+  a[href],
+  select:not(:disabled) {
+    @apply cursor-pointer;
+  }
+}
+
+@layer components {
+  .container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  .flex {
+    min-height: 0;
+    min-width: 0;
+  }
+
+  @media (min-width: 640px) {
+    .container {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container {
+      padding-left: 3rem;
+      padding-right: 3rem;
+      max-width: 1400px;
+    }
+  }
+
+  /* Grain texture overlay */
+  .grain-overlay {
+    position: relative;
+  }
+  .grain-overlay::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.35;
+  }
+
+  /* Amber glow effect */
+  .amber-glow {
+    box-shadow: 0 0 40px oklch(0.72 0.14 70 / 15%), 0 0 80px oklch(0.72 0.14 70 / 8%);
+  }
+
+  /* Section divider line */
+  .divider-amber {
+    height: 1px;
+    background: linear-gradient(to right, transparent, oklch(0.72 0.14 70 / 50%), transparent);
+  }
+
+  /* Display font utility */
+  .font-display {
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  /* UI font utility */
+  .font-ui {
+    font-family: 'Outfit', sans-serif;
+  }
+
+  /* Scroll reveal animation base */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
