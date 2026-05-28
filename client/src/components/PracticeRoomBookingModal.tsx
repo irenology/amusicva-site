@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { X } from "lucide-react";
-import { trpc } from "@/lib/trpc";
+import { sendEmail } from "@/lib/emailjs";
 
 const C = {
   bg: "#FAF7F2",
@@ -67,32 +67,9 @@ export default function PracticeRoomBookingModal({
   });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const submitPracticeRoomBooking =
-    trpc.bookings.submitPracticeRoomBooking.useMutation({
-      onSuccess: () => {
-        setSuccess(true);
-        setTimeout(() => {
-          onClose();
-          setSuccess(false);
-          setFormData({
-            membershipTier: "option1",
-            preferredDate: "",
-            preferredTime: "",
-            duration: "1",
-            name: "",
-            email: "",
-            phone: "",
-            notes: "",
-          });
-        }, 2000);
-      },
-      onError: (err: any) => {
-        setError(err.message || "Failed to create booking");
-      },
-    });
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
@@ -101,12 +78,44 @@ export default function PracticeRoomBookingModal({
       return;
     }
 
-    submitPracticeRoomBooking.mutate({
-      studentName: formData.name,
-      studentEmail: formData.email,
-      roomType: formData.membershipTier === "nonmember" ? "standard" : "premium",
-      hours: parseInt(formData.duration),
-    });
+    setIsSubmitting(true);
+    try {
+      await sendEmail({
+        fromName:  formData.name,
+        fromEmail: formData.email,
+        subject:   'Practice Room Booking Request',
+        message: [
+          `Membership Tier: ${formData.membershipTier}`,
+          `Preferred Date: ${formData.preferredDate}`,
+          `Preferred Time: ${formData.preferredTime}`,
+          `Duration: ${formData.duration} hour(s)`,
+          '',
+          `Name: ${formData.name}`,
+          `Email: ${formData.email}`,
+          `Phone: ${formData.phone}`,
+          formData.notes ? `\nNotes:\n${formData.notes}` : '',
+        ].filter(Boolean).join('\n'),
+      });
+      setSuccess(true);
+      setTimeout(() => {
+        onClose();
+        setSuccess(false);
+        setFormData({
+          membershipTier: "option1",
+          preferredDate: "",
+          preferredTime: "",
+          duration: "1",
+          name: "",
+          email: "",
+          phone: "",
+          notes: "",
+        });
+      }, 2000);
+    } catch (err: any) {
+      setError(err.message || "Failed to send booking request. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (!isOpen) return null;
@@ -476,7 +485,7 @@ export default function PracticeRoomBookingModal({
             <div className="flex gap-3">
               <button
                 type="submit"
-                disabled={submitPracticeRoomBooking.isPending}
+                disabled={isSubmitting}
                 style={{
                   flex: 1,
                   padding: "0.75rem",
@@ -485,15 +494,11 @@ export default function PracticeRoomBookingModal({
                   border: "none",
                   borderRadius: "0.5rem",
                   fontWeight: 600,
-                  cursor: submitPracticeRoomBooking.isPending
-                    ? "not-allowed"
-                    : "pointer",
-                  opacity: submitPracticeRoomBooking.isPending ? 0.6 : 1,
+                  cursor: isSubmitting ? "not-allowed" : "pointer",
+                  opacity: isSubmitting ? 0.6 : 1,
                 }}
               >
-                {submitPracticeRoomBooking.isPending
-                  ? "Submitting..."
-                  : "Submit Booking"}
+                {isSubmitting ? "Submitting..." : "Submit Booking"}
               </button>
               <button
                 type="button"

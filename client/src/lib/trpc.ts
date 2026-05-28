@@ -1,11 +1,22 @@
-// Static site stub - no backend needed
+import { sendEmail } from './emailjs';
+
 export const trpc = {
   bookings: {
     submitLessonBooking: {
       useMutation: () => ({
         mutateAsync: async (data: any) => {
-          // For static deployment: open mailto
-          window.location.href = `mailto:info@amusicva.com?subject=Lesson Booking - ${data.teacherName}&body=Name: ${data.studentName}%0AEmail: ${data.studentEmail}%0ATeacher: ${data.teacherName}%0ADuration: ${data.duration} min`;
+          await sendEmail({
+            fromName:  data.studentName,
+            fromEmail: data.studentEmail,
+            subject:   `Lesson Booking Request – ${data.teacherName}`,
+            message: [
+              `Teacher: ${data.teacherName}`,
+              `Duration: ${data.duration} minutes`,
+              '',
+              `Student Name: ${data.studentName}`,
+              `Email: ${data.studentEmail}`,
+            ].join('\n'),
+          });
           return {};
         },
         isPending: false,
@@ -15,11 +26,49 @@ export const trpc = {
     submitPracticeRoomBooking: {
       useMutation: () => ({
         mutateAsync: async (data: any) => {
-          window.location.href = `mailto:info@amusicva.com?subject=Practice Room Booking&body=Name: ${data.studentName}%0AEmail: ${data.studentEmail}%0ARoom: ${data.roomType}%0AHours: ${data.hours}`;
+          await sendEmail({
+            fromName:  data.studentName,
+            fromEmail: data.studentEmail,
+            subject:   'Practice Room Booking Request',
+            message: [
+              `Room Type: ${data.roomType}`,
+              `Hours: ${data.hours}`,
+              '',
+              `Name: ${data.studentName}`,
+              `Email: ${data.studentEmail}`,
+            ].join('\n'),
+          });
           return {};
         },
         isPending: false,
         isError: false,
+      }),
+    },
+  },
+  practiceRoomCalendar: {
+    getAvailableSlots: {
+      useQuery: (_params: any, _opts: any) => ({ data: undefined as any }),
+    },
+    submitCalendarBooking: {
+      useMutation: () => ({
+        mutateAsync: async (data: any) => {
+          await sendEmail({
+            fromName:  data.studentName,
+            fromEmail: data.studentEmail,
+            subject:   'Practice Room Calendar Booking',
+            message: [
+              `Date: ${data.bookingDate}`,
+              `Time: ${data.startTime} – ${data.endTime}`,
+              `Duration: ${data.durationHours} hour(s)`,
+              `Room Type: ${data.roomType}`,
+              '',
+              `Name: ${data.studentName}`,
+              `Email: ${data.studentEmail}`,
+              data.studentPhone ? `Phone: ${data.studentPhone}` : null,
+            ].filter(Boolean).join('\n'),
+          });
+          return { bookingId: `BK-${Date.now()}`, studentEmail: data.studentEmail };
+        },
       }),
     },
   },

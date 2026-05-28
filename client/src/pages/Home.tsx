@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Menu, X, Music, MapPin, Clock, Mail, ChevronDown, Star, Check } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
+import { sendEmail } from "@/lib/emailjs";
 import { CategorizedEventGallery } from "@/components/CategorizedEventGallery";
 
 // ─── Color Tokens ─────────────────────────────────────────────
@@ -153,6 +154,8 @@ function HireMusiciansForm({ musician }: { musician: string }) {
     additionalDetails: "",
   });
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
@@ -161,21 +164,46 @@ function HireMusiciansForm({ musician }: { musician: string }) {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 5000);
-    setFormData({
-      eventType: "",
-      eventDate: "",
-      eventLocation: "",
-      guestCount: "",
-      musicianPreference: musician,
-      name: "",
-      email: "",
-      phone: "",
-      additionalDetails: "",
-    });
+    setSubmitError("");
+    setIsSubmitting(true);
+    try {
+      await sendEmail({
+        fromName:  formData.name,
+        fromEmail: formData.email,
+        subject:   `Hire Musicians Request – ${formData.musicianPreference}`,
+        message: [
+          `Event Type: ${formData.eventType}`,
+          `Event Date: ${formData.eventDate}`,
+          `Location: ${formData.eventLocation}`,
+          `Guest Count: ${formData.guestCount}`,
+          `Musician: ${formData.musicianPreference}`,
+          '',
+          `Name: ${formData.name}`,
+          `Email: ${formData.email}`,
+          `Phone: ${formData.phone}`,
+          formData.additionalDetails ? `\nNotes:\n${formData.additionalDetails}` : '',
+        ].filter(Boolean).join('\n'),
+      });
+      setSubmitted(true);
+      setTimeout(() => setSubmitted(false), 5000);
+      setFormData({
+        eventType: "",
+        eventDate: "",
+        eventLocation: "",
+        guestCount: "",
+        musicianPreference: musician,
+        name: "",
+        email: "",
+        phone: "",
+        additionalDetails: "",
+      });
+    } catch {
+      setSubmitError("Failed to send inquiry. Please try again or email us directly.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const inputStyle = {
@@ -327,8 +355,15 @@ function HireMusiciansForm({ musician }: { musician: string }) {
           />
         </div>
 
+        {submitError && (
+          <div style={{ color: "#c33", fontSize: "0.85rem", marginBottom: "0.5rem" }}>
+            {submitError}
+          </div>
+        )}
+
         <button
           type="submit"
+          disabled={isSubmitting}
           style={{
             width: "100%",
             padding: "0.75rem",
@@ -338,10 +373,11 @@ function HireMusiciansForm({ musician }: { musician: string }) {
             borderRadius: "0.5rem",
             fontSize: "0.9rem",
             fontWeight: 600,
-            cursor: "pointer",
+            cursor: isSubmitting ? "not-allowed" : "pointer",
+            opacity: isSubmitting ? 0.7 : 1,
           }}
         >
-          Send Inquiry
+          {isSubmitting ? "Sending..." : "Send Inquiry"}
         </button>
       </form>
     </div>
@@ -2250,13 +2286,35 @@ function MembershipPlans() {
 
 function Contact({ onBookClick }: { onBookClick: () => void }) {
   const [sent, setSent] = useState(false);
+  const [isSending, setIsSending] = useState(false);
+  const [sendError, setSendError] = useState("");
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSent(true);
-    setTimeout(() => setSent(false), 5000);
-    setForm({ name: "", email: "", phone: "", message: "" });
+    setSendError("");
+    setIsSending(true);
+    try {
+      await sendEmail({
+        fromName:  form.name,
+        fromEmail: form.email,
+        subject:   'New Inquiry from Website',
+        message: [
+          `Name: ${form.name}`,
+          `Email: ${form.email}`,
+          form.phone ? `Phone: ${form.phone}` : '',
+          '',
+          `Message:\n${form.message}`,
+        ].filter(Boolean).join('\n'),
+      });
+      setSent(true);
+      setTimeout(() => setSent(false), 5000);
+      setForm({ name: "", email: "", phone: "", message: "" });
+    } catch {
+      setSendError("Failed to send message. Please try again or email us directly.");
+    } finally {
+      setIsSending(false);
+    }
   };
 
   const inputStyle = {
@@ -2414,12 +2472,26 @@ function Contact({ onBookClick }: { onBookClick: () => void }) {
                   />
                 </div>
 
+                {sendError && (
+                  <div style={{ color: "#c33", fontSize: "0.85rem" }}>
+                    {sendError}
+                  </div>
+                )}
+
                 <button
                   type="submit"
+                  disabled={isSending}
                   className="w-full py-3.5 rounded font-ui text-sm font-semibold transition-all hover:opacity-90 mt-2 cursor-pointer"
-                  style={{ background: C.accent, color: C.white, letterSpacing: "0.05em", border: "none" }}
+                  style={{
+                    background: C.accent,
+                    color: C.white,
+                    letterSpacing: "0.05em",
+                    border: "none",
+                    opacity: isSending ? 0.7 : 1,
+                    cursor: isSending ? "not-allowed" : "pointer",
+                  }}
                 >
-                  Send Message
+                  {isSending ? "Sending..." : "Send Message"}
                 </button>
               </form>
             </div>
