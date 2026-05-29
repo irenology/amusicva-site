@@ -11,7 +11,7 @@ import emailjs from '@emailjs/browser';
 // 4. Account → API Keys → copy the Public Key.
 // Replace the three placeholder strings below with your real values.
 export const EMAILJS_SERVICE_ID  = 'service_2q25cjh';
-export const EMAILJS_TEMPLATE_ID = 'xvm0xzm';
+export const EMAILJS_TEMPLATE_ID = 'template_9r9zwkp';
 export const EMAILJS_PUBLIC_KEY  = 'pKbo0ztm-LqP9bSc_';
 
 export async function sendEmail(params: {
