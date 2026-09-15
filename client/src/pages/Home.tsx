@@ -130,13 +130,6 @@ const faculty = [
     long: "Erin McAfee is a talented flutist and piccolo player based in Washington, DC. She is the winner of the 2025 UW Wind Ensemble concerto competition and an active member of the prestigious DCFlutes ensemble, a collective of accomplished flutists dedicated to advancing flute music in the DC region. Erin's performance experience includes both classical and contemporary music, and she is committed to expanding the flute repertoire. As an educator, Erin brings enthusiasm, technical expertise, and a genuine love for the flute to her teaching. She works with students from beginner to advanced levels, helping them develop proper embouchure, tone production, and musical expression. Erin believes that learning the flute should be an enjoyable and rewarding experience, and she tailors her teaching to each student's individual needs and musical interests.",
     unsplash: "https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=768,h=763,fit=crop/A3QOXG1bN1tJNqOp/erin-mcafee-1-A1azw0DnWBu5GgkQ.jpeg",
   },
-  {
-    name: "Teymour Saifi",
-    instrument: "Electric Bass",
-    short: "DC-based bassist, composer, and educator. Georgetown University music theory and performance studies. Performs across rock, ambient, and experimental genres.",
-    long: "Teymour Saifi is a versatile musician, composer, and educator based in Washington, DC. With formal training in music theory and performance from Georgetown University, Teymour has developed a comprehensive understanding of music across multiple genres. His performance experience spans rock, ambient, experimental, and world music traditions, making him a truly eclectic musician. As a bassist, Teymour is known for his solid groove, innovative approaches to harmony, and ability to adapt to any musical context. His compositional work reflects his diverse musical influences and his commitment to pushing creative boundaries. As an educator, Teymour brings a wealth of knowledge and a passion for helping students discover their own musical voice. He teaches electric bass, music theory, and composition to students of all levels, emphasizing both technical proficiency and creative expression.",
-    unsplash: "https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=768,h=763,fit=crop/A3QOXG1bN1tJNqOp/teymour-saifi-1-jpeg-m7VDw0bQVLSqo8zY.jpg",
-  },
 ];
 
 // ─── Hire Musicians Form Component ───────────────────────────
@@ -1379,7 +1372,6 @@ const lessonToTeacher: Record<string, string> = {
   "Guitar & Ukulele": "Bogdan (Bobo) Pejić",
   "Violin & Viola": "Vesna Pejić",
   "Flute & Piccolo": "Erin McAfee",
-  "Electric Bass": "Teymour Saifi",
   "Composition": "Bogdan (Bobo) Pejić",
 };
 
@@ -1389,7 +1381,6 @@ function Lessons({ onLessonClick }: { onLessonClick: (teacher: string) => void }
     { icon: "🎸", title: "Guitar & Ukulele", desc: "Classical, jazz, tango, and contemporary guitar. Ukulele for all ages." },
     { icon: "🎻", title: "Violin & Viola", desc: "From beginner to competition-ready. Chamber music and ensemble work." },
     { icon: "🎵", title: "Flute & Piccolo", desc: "Solo, orchestral, and chamber flute. All levels from beginner to advanced." },
-    { icon: "🎸", title: "Electric Bass", desc: "Rock, jazz, ambient, and experimental. Improvisation and composition." },
     { icon: "🎼", title: "Composition", desc: "Learn to write and arrange music across genres with expert guidance." },
   ];
 
