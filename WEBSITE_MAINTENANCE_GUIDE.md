@@ -194,7 +194,7 @@ client/src/pages/Home.tsx
 
 Open it in VS Code.
 
-### How to remove a faculty member (3 places to edit)
+### How to remove a faculty member (4 places to edit)
 
 Use **Find** (`Cmd+F` on Mac, `Ctrl+F` on Windows) to search for the teacher's name.
 
@@ -229,7 +229,26 @@ Search for the instrument name and delete its card:
 { icon: "🎸", title: "Their Instrument", desc: "..." },   // ← delete this line
 ```
 
-### How to add a faculty member (same 3 places)
+**Place 4 — Fix the faculty grid layout**
+
+After removing a teacher, the photo grid needs to be updated so the remaining teachers stay evenly spaced and centered.
+
+Search for `grid-cols-` in `Home.tsx`. You will find a line like:
+
+```tsx
+<div className="grid md:grid-cols-4 gap-6 mb-8 max-w-4xl mx-auto">
+```
+
+Change the number to match how many teachers remain:
+
+| Teachers remaining | Change to |
+|---|---|
+| 5 | `md:grid-cols-5` and remove `max-w-4xl mx-auto` |
+| 4 | `md:grid-cols-4 max-w-4xl mx-auto` ← current |
+| 3 | `md:grid-cols-3 max-w-3xl mx-auto` |
+| 2 | `md:grid-cols-2 max-w-xl mx-auto` |
+
+### How to add a faculty member (same 4 places)
 
 **Place 1 — Add to `faculty` array** (just before the closing `];`):
 
@@ -254,6 +273,10 @@ Search for the instrument name and delete its card:
 ```tsx
 { icon: "🎷", title: "Their Instrument", desc: "Short description." },
 ```
+
+**Place 4 — Update the faculty grid layout**
+
+Search for `grid-cols-` and update the number to match the new total count of teachers (see the table in the removal section above).
 
 ### Step B4 — Verify your changes
 
