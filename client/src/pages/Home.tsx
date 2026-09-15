@@ -1485,7 +1485,7 @@ function Faculty() {
           </h2>
         </div>
 
-        <div className="grid md:grid-cols-5 gap-6 mb-8">
+        <div className="grid md:grid-cols-4 gap-6 mb-8 max-w-4xl mx-auto">
           {faculty.map((f, i) => (
             <div
               key={i}
