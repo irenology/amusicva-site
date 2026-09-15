@@ -19,11 +19,9 @@ This guide covers everything you need to maintain and update the Appassionata we
 Before you can do anything, you need the following access granted by the site owner (Irene):
 
 ### 1. GitHub access
-You need to be added as a **Collaborator** on the repository.
+✅ **Already done** — GitHub Collaborator access has been shared with **appassionatava@gmail.com**.
 
-- Irene goes to: https://github.com/irenology/amusicva-site/settings/access
-- Clicks **Add people** → enters your GitHub username → sets role to **Write**
-- You accept the invitation sent to your email
+Check your inbox for an invitation email from GitHub and click **Accept invitation**. If you can't find it, check your spam folder or visit https://github.com/irenology/amusicva-site/invitations directly.
 
 > **Why:** Without Write access you can read the code but can't push changes. Every update to the site goes through GitHub.
 
